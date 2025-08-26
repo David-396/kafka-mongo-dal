@@ -1,30 +1,19 @@
-import uvicorn
 from fastapi import FastAPI
-from producer.publisher import Publisher
+from publisher import Publisher
 
 app = FastAPI()
 
-interesting_tmp_start_index = 0
-not_interesting_tmp_start_index = 0
 
-interesting_tmp_end_index = 10
-not_interesting_tmp_end_index = 10
-
-
-publisher = Publisher()
+publisher = Publisher(['kafka:9092'])
 
 
 @app.get('/')
 def publish_20_messages():
-    global interesting_tmp_end_index, not_interesting_tmp_end_index, interesting_tmp_start_index, not_interesting_tmp_start_index
+    try:
+        publisher.pub()
 
-    publisher.pub(interesting_tmp_start_index, not_interesting_tmp_start_index, interesting_tmp_end_index, not_interesting_tmp_end_index)
+        return 'messages published successfully'
 
-    interesting_tmp_start_index += 10
-    not_interesting_tmp_start_index += 10
-
-    interesting_tmp_end_index += 10
-    not_interesting_tmp_end_index +=10
-
-    return 'messages published successfully'
+    except Exception as e:
+        print(e)
 

@@ -1,5 +1,4 @@
 from datetime import datetime
-import uvicorn
 from fastapi import FastAPI
 from consumer import Consumer
 from mongo_dal import MongoDal
