@@ -4,7 +4,8 @@ from kafka import KafkaProducer
 class Publisher:
     def __init__(self, bootstrap_servers):
         self.producer = KafkaProducer(bootstrap_servers=bootstrap_servers,
-                                      value_serializer=lambda x: json.dumps(list(x)).encode('utf-8'))
+                                      value_serializer=lambda x: json.dumps(list(x)).encode('utf-8'),
+                                      )
 
         self.interesting_path = r'data/interesting_category_dict.json'
         self.not_interesting_path = r'data/newsgroups_not_interesting.json'
@@ -12,8 +13,18 @@ class Publisher:
         self.interesting_msgs = self.get_interesting_dict_from_file()
         self.not_interesting_msgs = self.get_not_interesting_dict_from_file()
 
+        self.categories_indexes = self.set_categories_indexes()
 
-        self.categories_indexes = {}
+
+    def set_categories_indexes(self):
+        categories_indexes = {}
+        for k, v in self.interesting_msgs.items():
+            categories_indexes[k] = 0
+
+        for k, v in self.not_interesting_msgs.items():
+            categories_indexes[k] = 0
+
+        return categories_indexes
 
 
     def get_interesting_dict_from_file(self):
@@ -34,11 +45,10 @@ class Publisher:
 
         for k, v in current_msgs_dict.items():
 
-            if k not in self.categories_indexes:
-                self.categories_indexes[k] = 0
-
             if self.categories_indexes[k] == len(v):
                 self.categories_indexes[k] = 0
+
+            print(categories_added)
 
             message = v[self.categories_indexes[k]]
             msgs_to_pub.append(message)
@@ -55,10 +65,9 @@ class Publisher:
     def pub(self):
 
         interesting_messages = self.current_pub_messages(interesting=True)
-        print(type(interesting_messages))
         self.producer.send(topic='interesting', value=interesting_messages)
-
+        print('afeter111111111111111111111')
         not_interesting_messages = self.current_pub_messages(interesting=False)
         self.producer.send(topic='not_interesting', value=not_interesting_messages)
-
+        print('afeter22222222222222222')
         self.producer.flush()
