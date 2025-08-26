@@ -1,7 +1,6 @@
 docker network create kafka-producer-net
 
-docker run --name kafka --network kafka-producer-net --hostname=1ef2ab959c60 --user=appuser --mac-address=4e:ab:89:54:28:fb --env=PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin --env=JAVA_HOME=/opt/java/openjdk --env=LANG=en_US.UTF-8 --env=LANGUAGE=en_US:en --env=LC_ALL=en_US.UTF-8 --env=JAVA_VERSION=jdk-21.0.6+7 --volume=/etc/kafka/secrets --volume=/mnt/shared/config --volume=/var/lib/kafka/data --network=bridge --workdir=/ --restart=no --label='maintainer=Apache Kafka' --label='org.label-schema.build-date=2025-03-14' --label='org.label-schema.description=Apache Kafka' --label='org.label-schema.name=kafka' --label='org.label-schema.vcs-url=https://github.com/apache/kafka' --runtime=runc -d apache/kafka:latest
-
+docker run -d --name kafka --network kafka-producer-net -e KAFKA_NODE_ID=1 -e KAFKA_PROCESS_ROLES=broker,controller -e KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,PLAINTEXT_HOST://0.0.0.0:9092 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092 -e KAFKA_CONTROLLER_QUORUM_VOTERS=1@localhost:29093 -e KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT -e KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 -e KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1 -e KAFKA_LOG_DIRS=/tmp/kraft-combined-logs apache/kafka:latest
 
 docker stop producer
 docker rm producer

@@ -48,8 +48,6 @@ class Publisher:
             if self.categories_indexes[k] == len(v):
                 self.categories_indexes[k] = 0
 
-            print(categories_added)
-
             message = v[self.categories_indexes[k]]
             msgs_to_pub.append(message)
             self.categories_indexes[k] += 1
@@ -66,8 +64,8 @@ class Publisher:
 
         interesting_messages = self.current_pub_messages(interesting=True)
         self.producer.send(topic='interesting', value=interesting_messages)
-        print('afeter111111111111111111111')
+
         not_interesting_messages = self.current_pub_messages(interesting=False)
         self.producer.send(topic='not_interesting', value=not_interesting_messages)
-        print('afeter22222222222222222')
+
         self.producer.flush()

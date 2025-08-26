@@ -1,10 +1,11 @@
+import uvicorn
 from fastapi import FastAPI
 from publisher import Publisher
 
 app = FastAPI()
 
 
-publisher = Publisher(['kafka:9092'])
+publisher = Publisher(['kafka:29092'])
 
 
 @app.get('/')
@@ -16,4 +17,3 @@ def publish_20_messages():
 
     except Exception as e:
         print(e)
-
