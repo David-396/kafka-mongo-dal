@@ -28,5 +28,3 @@ def publish_20_messages():
 
     return 'messages published successfully'
 
-
-uvicorn.run(app=app, host='localhost', port=8080)
