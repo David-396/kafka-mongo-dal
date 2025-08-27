@@ -5,13 +5,13 @@ from mongo_dal import MongoDal
 
 app = FastAPI()
 
-mongo_client = MongoDal(host='localhost', port=27017)
+mongo_client = MongoDal(host='mongo_db', port=27017)
 
 @app.get('/interesting')
 def get_not_interesting():
 
     try:
-        consumer = Consumer(['localhost:9092'])
+        consumer = Consumer(['kafka:29092'])
         interesting_messages = consumer.consume('interesting')
 
         clean_messages = []
@@ -36,7 +36,7 @@ def get_not_interesting():
 def get_not_interesting():
 
     try:
-        consumer = Consumer(['localhost:9092'])
+        consumer = Consumer(['kafka:29092'])
         not_interesting_messages = consumer.consume('not_interesting')
 
         clean_messages = []

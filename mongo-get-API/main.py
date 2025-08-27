@@ -5,7 +5,7 @@ from mongo_connect import MongoConnect
 
 app = FastAPI()
 
-mongo_client = MongoConnect(host='localhost', port=27017)
+mongo_client = MongoConnect(host='mongo_db', port=27017)
 
 @app.get('/get-interesting')
 def get_interesting_msgs():
